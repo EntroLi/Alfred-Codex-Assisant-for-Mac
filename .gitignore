@@ -1,0 +1,43 @@
+.build/
+.build-xcode/
+.build-tests/
+.staging/
+releases/
+.DS_Store
+
+# Local personal runtime snapshots are retained for rollback, never committed.
+evidence/usage-cache-*.json
+evidence/preferences-*.plist
+
+# Mutable diagnostics remain available locally; commit only observation snapshots.
+evidence/runtime-final-0.8.0.json
+evidence/runtime-0.8.0.log
+
+# Local live diagnostics and images may include personal conversation titles.
+evidence/runtime-0.9.0.json
+evidence/interface-0.9.0/
+
+evidence/runtime-0.9.1.json
+evidence/interface-0.9.1/
+
+evidence/interface-0.10.0/
+evidence/runtime-0.10.0.json
+
+evidence/interface-0.10.1/
+evidence/runtime-0.10.1.json
+
+evidence/interface-0.10.2/
+evidence/runtime-0.10.2.json
+
+evidence/interface-0.10.3/
+evidence/runtime-0.10.3.json
+evidence/interface-1.0.0/
+evidence/runtime-1.0.0.json
+evidence/interface-1.0.1/
+evidence/runtime-1.0.1.json
+evidence/interface-1.0.2/
+evidence/runtime-1.0.2.json
+
+__pycache__/
+evidence/runtime-1.0.3.json
+evidence/interface-1.0.3/

@@ -1,0 +1,376 @@
+[
+  {
+    "name": "小白开心摇摆",
+    "row": 11,
+    "frameCount": 8,
+    "duration": 3.0,
+    "weight": 1.0,
+    "visibleBounds": [
+      25,
+      57,
+      167,
+      192
+    ],
+    "source": "797492409.png",
+    "sourceSha256": "9713449ad3d3d91eaa2e293ccc92684158ff75aadefd615945c8b4998012089e",
+    "sourceFrameCount": 19,
+    "sourceDuration": 3.0
+  },
+  {
+    "name": "小鸡毛开心摇摆",
+    "row": 12,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      9,
+      64,
+      183,
+      195
+    ],
+    "source": "797469649.png",
+    "sourceSha256": "73ededaa723286854f48b73fc54daebef8d4ab4610d2e3f3c12a3bca3a4f0852",
+    "sourceFrameCount": 13,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "并肩靠近",
+    "row": 13,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      17,
+      43,
+      175,
+      195
+    ],
+    "source": "797492414.png",
+    "sourceSha256": "196ed9846198d99cde5d43dca22194c9237dcf8a0c0aefeebc61f3ed994e964d",
+    "sourceFrameCount": 18,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小白开心坐坐",
+    "row": 14,
+    "frameCount": 8,
+    "duration": 3.0,
+    "weight": 1.0,
+    "visibleBounds": [
+      33,
+      43,
+      158,
+      195
+    ],
+    "source": "797492421.png",
+    "sourceSha256": "fba842bbde05c4725ef59a46f26747d3dc963f3e883794a48408ca4fa3cbb8a0",
+    "sourceFrameCount": 11,
+    "sourceDuration": 3.0
+  },
+  {
+    "name": "小鸡毛开心坐坐",
+    "row": 15,
+    "frameCount": 8,
+    "duration": 3.0,
+    "weight": 1.0,
+    "visibleBounds": [
+      30,
+      43,
+      162,
+      195
+    ],
+    "source": "797469661.png",
+    "sourceSha256": "25de36e5b7a639902ab2127b3c06a6e5d389e2fedde7b40202ad48eb4d5eecb8",
+    "sourceFrameCount": 11,
+    "sourceDuration": 3.0
+  },
+  {
+    "name": "小白托腮思考",
+    "row": 16,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      34,
+      63,
+      157,
+      192
+    ],
+    "source": "797492423.png",
+    "sourceSha256": "62e228fb53f78bb7718e7e1e0043e798effde5c661424cdae4ab062e1ab0791e",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小鸡毛托腮思考",
+    "row": 17,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      32,
+      56,
+      159,
+      192
+    ],
+    "source": "797469663.png",
+    "sourceSha256": "6fb5327fc44f9f7f6c1dff40536af4e97db7ed970dd563b43dac93df273d5da4",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小白软垫睡觉",
+    "row": 18,
+    "frameCount": 8,
+    "duration": 3.0,
+    "weight": 1.0,
+    "visibleBounds": [
+      9,
+      86,
+      183,
+      195
+    ],
+    "source": "797492424.png",
+    "sourceSha256": "b9aacd8d857a6d60d147f6e980d09db758629bde047a6d5f621e3b45322624e1",
+    "sourceFrameCount": 9,
+    "sourceDuration": 3.0
+  },
+  {
+    "name": "小白头顶小花",
+    "row": 19,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      38,
+      45,
+      152,
+      193
+    ],
+    "source": "828263468.png",
+    "sourceSha256": "5a4706331920ef71b56b8c93d6b60722525c03494e6845ed622761ec5c2370d0",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小鸡毛头顶小花",
+    "row": 20,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      37,
+      45,
+      155,
+      193
+    ],
+    "source": "828263508.png",
+    "sourceSha256": "7dcfbc9f8e4bab673bba08b18d88cc16e66c327faa5b941be25aea7e3fb98e53",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小白举爪欢呼",
+    "row": 21,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      12,
+      45,
+      180,
+      193
+    ],
+    "source": "443337437.png",
+    "sourceSha256": "e1697c678f651ee71054394ecc057e23b70f1ff828a5109b996dc461d9fa4af5",
+    "sourceFrameCount": 18,
+    "sourceDuration": 1.0
+  },
+  {
+    "name": "小白轻轻走来",
+    "row": 22,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      9,
+      117,
+      182,
+      195
+    ],
+    "source": "443337442.png",
+    "sourceSha256": "121825e3fab2a6d32d254c4cea8d3a34fad63074d90fab5299d03786b6f86d81",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小白开心蹦跶",
+    "row": 23,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      46,
+      88,
+      146,
+      192
+    ],
+    "source": "443337446.png",
+    "sourceSha256": "c6f30568d6ca4173f490cc256e60fba872109ff38a80895cd23d1c75c59f0256",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小白趴下休息",
+    "row": 24,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      12,
+      96,
+      179,
+      192
+    ],
+    "source": "443337451.png",
+    "sourceSha256": "8ee2a2832068bdabd78607976100d042fd7fc9a3cf5501118c26b798633841bc",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小白害羞脸红",
+    "row": 25,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      32,
+      73,
+      160,
+      192
+    ],
+    "source": "809405256.png",
+    "sourceSha256": "b154b8bcbbf6fcb5b57250612204ad84d1127b38039b7a75977be91fa2f96fc2",
+    "sourceFrameCount": 10,
+    "sourceDuration": 1.333
+  },
+  {
+    "name": "小鸡毛趴枕发呆",
+    "row": 26,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      29,
+      44,
+      164,
+      195
+    ],
+    "source": "809405080.png",
+    "sourceSha256": "8f7e18e40c6ddd1bdf5fb57244a62f02c4dc53aa51789e24746dc7d14ca7f71c",
+    "sourceFrameCount": 12,
+    "sourceDuration": 1.0
+  },
+  {
+    "name": "小鸡毛裹毯睡觉",
+    "row": 27,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      14,
+      99,
+      178,
+      192
+    ],
+    "source": "809405086.png",
+    "sourceSha256": "d542cd2728b7f07b7d09783c829dd1695be8adf7e5ae2eba1b7f9561b7640d95",
+    "sourceFrameCount": 18,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小白回头撒花",
+    "row": 28,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      8,
+      45,
+      184,
+      195
+    ],
+    "source": "828263461.png",
+    "sourceSha256": "ecb6a6266025a36102db0820ca4b5561041eef70f9dd4de1dc7837f984a4e965",
+    "sourceFrameCount": 10,
+    "sourceDuration": 1.0
+  },
+  {
+    "name": "小鸡毛回头撒花",
+    "row": 29,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      17,
+      42,
+      174,
+      196
+    ],
+    "source": "828263501.png",
+    "sourceSha256": "b4d28e494aa55056e488178a531dee2f33ae1d03ab2f52dddcc8bdb318603c10",
+    "sourceFrameCount": 10,
+    "sourceDuration": 1.0
+  },
+  {
+    "name": "小白花瓣发呆",
+    "row": 30,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      9,
+      66,
+      182,
+      195
+    ],
+    "source": "828263469.png",
+    "sourceSha256": "124a13aedcc68d7b8365dc50648f8dd24e902829df4ef4610c7c9f9d85aebd66",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小鸡毛花瓣发呆",
+    "row": 31,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      9,
+      56,
+      183,
+      195
+    ],
+    "source": "828263509.png",
+    "sourceSha256": "130d6831205516050c36edb36386bc3d84478e1eac69e1259b72d1951aa988e5",
+    "sourceFrameCount": 20,
+    "sourceDuration": 2.0
+  },
+  {
+    "name": "小鸡毛龟壳打盹",
+    "row": 32,
+    "frameCount": 8,
+    "duration": 2.2,
+    "weight": 1.0,
+    "visibleBounds": [
+      29,
+      110,
+      163,
+      192
+    ],
+    "source": "828263516.png",
+    "sourceSha256": "4556c08e63755c62ff539674beff926b3a3b1ebfece4054ffc9ec74d4a5bfbdb",
+    "sourceFrameCount": 15,
+    "sourceDuration": 2.0
+  }
+]

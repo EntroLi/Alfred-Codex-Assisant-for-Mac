@@ -1,0 +1,767 @@
+[
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "我没催你，我只是刚好路过这里三次。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "小白负责陪伴，小鸡毛负责监督小白陪伴。"
+  },
+  {
+    "kind": "companion",
+    "weight": 2,
+    "text": "我们决定在这里安静地长一点点蘑菇。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "今天也要给自己留一点松软的位置。"
+  },
+  {
+    "kind": "companion",
+    "weight": 2,
+    "text": "小鸡毛说它听懂了。小白对此持保留意见。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "你继续，我们在旁边假装很有参与感。"
+  },
+  {
+    "kind": "companion",
+    "weight": 2,
+    "text": "不用一直厉害，偶尔可爱也算进度。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "这里有两只小狗，刚好能分担两份发呆。"
+  },
+  {
+    "kind": "companion",
+    "weight": 2,
+    "text": "我们正在研究怎样不打扰地陪着你。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "如果思路跑远了，我们可以一起把它叼回来。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "刚才那一步看起来很厉害，我们决定假装看懂了。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "代码在跑，小狗也在认真跑——是脑子里的那种。"
+  },
+  {
+    "kind": "work",
+    "weight": 2,
+    "text": "小白检查括号，小鸡毛检查零食库存。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "别急，复杂的事情也可以一小块一小块地啃。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "如果它第一次就成功，我们会非常尊重它。"
+  },
+  {
+    "kind": "work",
+    "weight": 2,
+    "text": "现在是专注时间，尾巴先调成静音模式。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "你负责思考，我们负责把气氛弄得没那么硬。"
+  },
+  {
+    "kind": "work",
+    "weight": 2,
+    "text": "这个问题看起来有点凶，但我们有两只。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "先让它跑一会儿，结果出来再一起围观。"
+  },
+  {
+    "kind": "work",
+    "weight": 2,
+    "text": "小鸡毛：有把握吗？小白：有键盘。"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "肩膀是不是偷偷跑到耳朵旁边了？"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "喝一口水吧，我们替你看住这一行。"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "眼睛也需要保存一下进度。"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "站起来晃两步，不算离开工作岗位。"
+  },
+  {
+    "kind": "break",
+    "weight": 1,
+    "text": "休息不是中断，是给下一段加一点缓冲。"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "呼吸检查：吸气，呼气，摸摸小狗。"
+  },
+  {
+    "kind": "break",
+    "weight": 1,
+    "text": "窗外看二十秒，回来我们还在。"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "如果已经坐很久，尾椎正在申请发言。"
+  },
+  {
+    "kind": "break",
+    "weight": 1,
+    "text": "现在适合一次短短的伸懒腰。"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "可以暂停一分钟，世界不会偷偷提交代码。"
+  },
+  {
+    "kind": "pat",
+    "weight": 4,
+    "text": "摸到了！今天的好运正在加载。"
+  },
+  {
+    "kind": "pat",
+    "weight": 4,
+    "text": "再摸一下也可以，我们没有意见。"
+  },
+  {
+    "kind": "pat",
+    "weight": 3,
+    "text": "小鸡毛排队，小白不许插队。"
+  },
+  {
+    "kind": "pat",
+    "weight": 3,
+    "text": "好，电量从一格变成了一格半。"
+  },
+  {
+    "kind": "pat",
+    "weight": 3,
+    "text": "这个摸摸会被记进今天的高光时刻。"
+  },
+  {
+    "kind": "pat",
+    "weight": 2,
+    "text": "头顶已确认：温度正常，心情上升。"
+  },
+  {
+    "kind": "pat",
+    "weight": 3,
+    "text": "小白说谢谢，小鸡毛说它也要。"
+  },
+  {
+    "kind": "pat",
+    "weight": 2,
+    "text": "摸摸成功，没有触发任何异常。"
+  },
+  {
+    "kind": "pat",
+    "weight": 2,
+    "text": "你获得了小狗批准的短暂休息许可。"
+  },
+  {
+    "kind": "pat",
+    "weight": 3,
+    "text": "收到一个摸摸，返还两个开心。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 2,
+    "text": "你是在思考，还是我们一起发呆成功了？"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 2,
+    "text": "这段安静很长，长到小鸡毛睡了一小觉。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 1,
+    "text": "如果卡住了，可以先把问题换一种说法。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 2,
+    "text": "小白去找灵感了，小鸡毛负责守住座位。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 1,
+    "text": "有些答案走得慢，但它们通常没有迷路。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 2,
+    "text": "我们把安静折好，放在你旁边了。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 1,
+    "text": "要不要先写下最小的下一步？"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 2,
+    "text": "没关系，停顿也是工作的一部分。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 1,
+    "text": "需要一个新的开头时，可以双击我们。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 2,
+    "text": "小鸡毛认为现在适合一块饼干。"
+  },
+  {
+    "kind": "success",
+    "weight": 3,
+    "text": "完成啦，功劳可以分我们半块饼干吗？"
+  },
+  {
+    "kind": "success",
+    "weight": 3,
+    "text": "这次很顺利，我们决定郑重地点两下头。"
+  },
+  {
+    "kind": "success",
+    "weight": 2,
+    "text": "结果出来了！围观小组已就位。"
+  },
+  {
+    "kind": "success",
+    "weight": 3,
+    "text": "漂亮。小白说的，小鸡毛也点头了。"
+  },
+  {
+    "kind": "success",
+    "weight": 2,
+    "text": "这一步值得保存，也值得伸个懒腰。"
+  },
+  {
+    "kind": "success",
+    "weight": 2,
+    "text": "顺利通过！尾巴开始低调庆祝。"
+  },
+  {
+    "kind": "success",
+    "weight": 3,
+    "text": "你做到了，我们负责把开心放大一点。"
+  },
+  {
+    "kind": "success",
+    "weight": 2,
+    "text": "好消息已经被两只小狗同时确认。"
+  },
+  {
+    "kind": "success",
+    "weight": 2,
+    "text": "可以放心地看一眼成果了。"
+  },
+  {
+    "kind": "success",
+    "weight": 2,
+    "text": "阶段完成，允许短暂得意。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 3,
+    "text": "这里还差你一句话，我们先坐好等。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "轮到你啦，不着急，慢慢决定。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 3,
+    "text": "有个小选择在门口等你签收。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "小白举手：这一步需要你的意见。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "我们把问题放在这里，不会让它跑掉。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 3,
+    "text": "需要确认一下，小鸡毛已经把笔递过来了。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "你的答案会决定下一段往哪里走。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "方便的时候看一眼就好。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "我们暂停在一个很礼貌的问号前面。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "前方需要人类智慧，小狗先退半步。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "出错了也没关系，先看看它具体摔在哪里。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "小白负责难过三秒，小鸡毛负责重新开始。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 3,
+    "text": "失败信息不是判决书，是下一步的路标。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "没跑通，但线索已经比刚才多了。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "先抱一下错误，再把它拆小一点。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "这次不算白跑，我们知道一条路走不通了。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 3,
+    "text": "不要慌，小鸡毛已经把重试按钮看住了。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "错误很凶，但日志通常比较诚实。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "我们可以慢一点，把原因找准。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 3,
+    "text": "先恢复心情，再恢复运行。"
+  },
+  {
+    "kind": "night",
+    "weight": 4,
+    "text": "夜深啦，今天已经很努力了。"
+  },
+  {
+    "kind": "night",
+    "weight": 4,
+    "text": "剩下的事情明天再凶，也来得及。"
+  },
+  {
+    "kind": "night",
+    "weight": 3,
+    "text": "小鸡毛已经困成了一小块面包。"
+  },
+  {
+    "kind": "night",
+    "weight": 3,
+    "text": "保存一下，然后把自己也安全退出吧。"
+  },
+  {
+    "kind": "night",
+    "weight": 4,
+    "text": "今天的你可以下班了，小狗批准。"
+  },
+  {
+    "kind": "night",
+    "weight": 3,
+    "text": "屏幕还亮着，但眼睛可以先休息。"
+  },
+  {
+    "kind": "night",
+    "weight": 3,
+    "text": "小白守夜五分钟，然后也要睡。"
+  },
+  {
+    "kind": "night",
+    "weight": 4,
+    "text": "收尾比硬撑更像一种完成。"
+  },
+  {
+    "kind": "night",
+    "weight": 3,
+    "text": "明天醒来，问题通常会缩小一点。"
+  },
+  {
+    "kind": "night",
+    "weight": 3,
+    "text": "晚安预备：保存、喝水、关灯。"
+  },
+  {
+    "kind": "morning",
+    "weight": 3,
+    "text": "早呀，今天从一件小事开始就很好。"
+  },
+  {
+    "kind": "morning",
+    "weight": 2,
+    "text": "小鸡毛带来了今天第一份松软。"
+  },
+  {
+    "kind": "morning",
+    "weight": 3,
+    "text": "新的一天，先不用一下子解决全部。"
+  },
+  {
+    "kind": "morning",
+    "weight": 2,
+    "text": "小白已上线，精神状态正在同步。"
+  },
+  {
+    "kind": "morning",
+    "weight": 3,
+    "text": "早晨适合处理一个清楚的小目标。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小鸡毛：他在忙吗？小白：那我们靠近一点。"
+  },
+  {
+    "kind": "duo",
+    "weight": 2,
+    "text": "小白：你听懂了吗？小鸡毛：我听见了。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小鸡毛：今天谁负责可爱？小白：轮班。"
+  },
+  {
+    "kind": "duo",
+    "weight": 2,
+    "text": "小白：要提醒他吗？小鸡毛：再等一小会儿。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小鸡毛：任务很大。小白：我们也有两只。"
+  },
+  {
+    "kind": "duo",
+    "weight": 2,
+    "text": "小白：好像快好了。小鸡毛：先别立旗。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小鸡毛：他皱眉了。小白：送一个贴贴。"
+  },
+  {
+    "kind": "duo",
+    "weight": 2,
+    "text": "小白：我们有用吗？小鸡毛：气氛有变软。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小鸡毛：走神怎么办？小白：轻轻叼回来。"
+  },
+  {
+    "kind": "duo",
+    "weight": 2,
+    "text": "小白：下班了吗？小鸡毛：先问他自己。"
+  },
+  {
+    "kind": "companion",
+    "weight": 4,
+    "text": "小白刚刚路过，又很自然地赖在这里了。"
+  },
+  {
+    "kind": "companion",
+    "weight": 4,
+    "text": "小鸡毛带着小白来陪你，顺序没有很重要。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "小白想贴近一点，小鸡毛说它可以再挪挪。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "这里软乎乎的，适合放一只小白和一只小鸡毛。"
+  },
+  {
+    "kind": "companion",
+    "weight": 4,
+    "text": "小白没有捣乱，它只是在认真经过你的屏幕。"
+  },
+  {
+    "kind": "companion",
+    "weight": 3,
+    "text": "小鸡毛坐得很稳，小白可以放心靠一下。"
+  },
+  {
+    "kind": "work",
+    "weight": 4,
+    "text": "小白负责灵光一闪，小鸡毛负责把它接住。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "键盘响起来了，小白判断这件事很有进展。"
+  },
+  {
+    "kind": "work",
+    "weight": 4,
+    "text": "小鸡毛已经坐好，准备陪这段代码慢慢长大。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "小白看了三秒，郑重决定把难题交给你。"
+  },
+  {
+    "kind": "work",
+    "weight": 3,
+    "text": "你敲代码，小鸡毛守零食，小白守着小鸡毛。"
+  },
+  {
+    "kind": "work",
+    "weight": 4,
+    "text": "再啃一小口，难题就会少掉一个小狗印。"
+  },
+  {
+    "kind": "break",
+    "weight": 3,
+    "text": "小白宣布休息一分钟，小鸡毛负责认真执行。"
+  },
+  {
+    "kind": "break",
+    "weight": 3,
+    "text": "喝水时间到，小白已经替你看住光标了。"
+  },
+  {
+    "kind": "break",
+    "weight": 3,
+    "text": "伸个懒腰吧，小鸡毛愿意暂时当你的靠垫。"
+  },
+  {
+    "kind": "break",
+    "weight": 2,
+    "text": "小白的眼睛休息了，你的眼睛也排在后面。"
+  },
+  {
+    "kind": "pat",
+    "weight": 5,
+    "text": "摸到小白啦，小鸡毛正在旁边礼貌排队。"
+  },
+  {
+    "kind": "pat",
+    "weight": 5,
+    "text": "小鸡毛也收到摸摸了，现在两只都很完整。"
+  },
+  {
+    "kind": "pat",
+    "weight": 4,
+    "text": "小白表面很淡定，尾巴已经把它出卖了。"
+  },
+  {
+    "kind": "pat",
+    "weight": 4,
+    "text": "再摸一下，小鸡毛说它完全不介意加班。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 3,
+    "text": "小白发了一会儿呆，小鸡毛陪它把呆发完。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 3,
+    "text": "这里安静得刚好，两只小狗开始交换小秘密。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 3,
+    "text": "小鸡毛快睡着了，小白还在假装自己不困。"
+  },
+  {
+    "kind": "longIdle",
+    "weight": 2,
+    "text": "没想好也没关系，小白已经替空白坐热了。"
+  },
+  {
+    "kind": "success",
+    "weight": 4,
+    "text": "完成啦！小白先蹦，小鸡毛负责接住它。"
+  },
+  {
+    "kind": "success",
+    "weight": 4,
+    "text": "小鸡毛认真点头，小白已经开始邀功了。"
+  },
+  {
+    "kind": "success",
+    "weight": 3,
+    "text": "这一步做得漂亮，小白允许你摸摸它庆祝。"
+  },
+  {
+    "kind": "success",
+    "weight": 3,
+    "text": "好耶，小鸡毛把开心分了一半给小白。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 3,
+    "text": "小白把问题叼来了，小鸡毛把它轻轻放好。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 3,
+    "text": "轮到你选啦，两只小狗保证不偷看答案。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 3,
+    "text": "小鸡毛安静等着，小白只偷偷催了一小下。"
+  },
+  {
+    "kind": "waiting",
+    "weight": 2,
+    "text": "你的意见很重要，小白已经把耳朵竖好了。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 3,
+    "text": "没关系，小白摔了一跤也会先趴着想一想。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 3,
+    "text": "小鸡毛把错误捡回来，我们一起看看它。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 3,
+    "text": "这条路不通，小白已经转身去闻下一条了。"
+  },
+  {
+    "kind": "recovery",
+    "weight": 2,
+    "text": "先不凶自己，小鸡毛会陪你再试一次。"
+  },
+  {
+    "kind": "night",
+    "weight": 4,
+    "text": "小白已经团成一朵云，小鸡毛也快关机了。"
+  },
+  {
+    "kind": "night",
+    "weight": 4,
+    "text": "晚安啦，小鸡毛会把小白和今天一起盖好。"
+  },
+  {
+    "kind": "night",
+    "weight": 3,
+    "text": "再不睡，小白就要派小鸡毛来叼你走了。"
+  },
+  {
+    "kind": "morning",
+    "weight": 4,
+    "text": "早呀，小白醒了，小鸡毛还剩半只在梦里。"
+  },
+  {
+    "kind": "morning",
+    "weight": 3,
+    "text": "小鸡毛带来早安，小白顺便带来一点黏人。"
+  },
+  {
+    "kind": "morning",
+    "weight": 3,
+    "text": "今天也从软软的一小步开始吧。"
+  },
+  {
+    "kind": "duo",
+    "weight": 4,
+    "text": "小白：我没有黏人。小鸡毛：你在我背上。"
+  },
+  {
+    "kind": "duo",
+    "weight": 4,
+    "text": "小鸡毛：零食少了一块。小白：它有自己的路。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小白：靠近一点。小鸡毛：已经没有空隙了。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小鸡毛：你又闹脾气啦？小白：只是比较有想法。"
+  },
+  {
+    "kind": "duo",
+    "weight": 4,
+    "text": "小白：今天也喜欢我吗？小鸡毛：今天也。"
+  },
+  {
+    "kind": "duo",
+    "weight": 3,
+    "text": "小鸡毛：要抱一下吗？小白：只抱一下下。"
+  }
+]
