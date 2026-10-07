@@ -51,6 +51,8 @@ struct AgendaOperation: Codable, Equatable {
     // Clear a native nullable text field; never use an empty string to imply nil.
     var clearFields: [String]? = nil
     var notesMode: AgendaNotesMode? = nil
+    // Explicitly approved single-event deletion; no guarantee of restoring original identity.
+    var allowIrrecoverableDelete: Bool? = nil
 }
 
 struct AgendaBatch: Codable, Equatable {
@@ -264,7 +266,14 @@ enum AgendaWorkflowCodec {
         guard Set(op.changes.keys).isSubset(of: allowed) else {
             throw AgendaWorkflowError.invalid("Unsupported field: only title/time/location/notes patches; category is identity, not writable")
         }
-        guard op.action != .delete else { throw AgendaWorkflowError.invalid("Deletion/cancellation unsupported without reliable recovery; historical receipts remain readable") }
+        if op.action == .delete {
+            guard op.target.entity == .event, op.allowIrrecoverableDelete == true,
+                  op.changes.isEmpty, op.clearFields == nil, op.notesMode == nil else {
+                throw AgendaWorkflowError.invalid("Single-event deletion requires explicit no-recovery acknowledgement and no patches")
+            }
+        } else if op.allowIrrecoverableDelete != nil {
+            throw AgendaWorkflowError.invalid("Delete acknowledgement on non-delete operation")
+        }
         let clear = op.clearFields ?? []
         guard clear == Array(Set(clear)).sorted(), Set(clear).isSubset(of: textFields),
               Set(clear).isDisjoint(with: Set(op.changes.keys)), op.target.entity == .event || clear.isEmpty && op.notesMode == nil else {

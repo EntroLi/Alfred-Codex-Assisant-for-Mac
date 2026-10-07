@@ -1,8 +1,8 @@
 {
-  "version": "1.1.0",
-  "build": "28",
-  "sourceCommit": "71315ab11e1bb34cafac32603dbbed50f4b237bc",
-  "exportedAt": "2026-10-07T08:47:49.835229+00:00",
+  "version": "1.1.1",
+  "build": "29",
+  "sourceCommit": "b5eb24916512e481b0a091e87da3e458e94f28c3",
+  "exportedAt": "2026-10-07T12:13:12.498983+00:00",
   "scope": "Current source snapshot; no original local Git history or runtime data",
   "transformations": [
     "Public documentation replaces private handoff/evidence",
@@ -10,12 +10,12 @@
   ],
   "sourceHashes": {
     "Sources/CodexQuotaBar/ActivityState.swift": "4492112e5c278ad62705dd2ad6c4516756dddef04aceed18d765426611b9fbb7",
-    "Sources/CodexQuotaBar/AgendaEventKitStore.swift": "20a8218439b7dd1eca64552bceb2a505b58d228c981bf7b60f35e21a979d722a",
+    "Sources/CodexQuotaBar/AgendaEventKitStore.swift": "45568a7f50081b5031c2ef3a40bd8a90f9201dec5762e5718ca6e594549ae2aa",
     "Sources/CodexQuotaBar/AgendaModels.swift": "1f33db75a06c70fade7b8c274d8f14bd8b320e50b042327f50b826f6bad3afc1",
     "Sources/CodexQuotaBar/AgendaPrivacyRequest.swift": "1ce2e5a53757941fad7eef11759d86dc7219ee06c2cd39213718967073c337fb",
     "Sources/CodexQuotaBar/AgendaWorkflowCLI.swift": "43271b03ddd426d1c9d58e471ea9ee840761d09489963c91a98d44afb24d07a7",
-    "Sources/CodexQuotaBar/AgendaWorkflowEngine.swift": "70afa69942889278d9836582e83fd65a1ec98e5a05ef93d3dfaba22efb873c1f",
-    "Sources/CodexQuotaBar/AgendaWorkflowModels.swift": "ae24431c58f7aea6496ed66797b9be19b6fc7bb5da311d2c6d704594c1245a68",
+    "Sources/CodexQuotaBar/AgendaWorkflowEngine.swift": "c1a6b2e962a7ab9fa8f0c9427b3fab3d118977d3a034e4bf69a41a9c92e4400c",
+    "Sources/CodexQuotaBar/AgendaWorkflowModels.swift": "80f648298d371927617d5a92b5dc97e3dec2d1fd95e6bdac4351b50ef6e6c54e",
     "Sources/CodexQuotaBar/AlfredControls.swift": "c7461a805f3caf8c5d2b59453849cb933f6f369b908f98ef611ece8e91334ffe",
     "Sources/CodexQuotaBar/AlfredNotifications.swift": "7ece1c666a5c443e10af7a3a0db0f1d221a715b8d289d28cd56bfc5068e5aba4",
     "Sources/CodexQuotaBar/AlfredPanelPresenter.swift": "d7bfe54b7341c185900fb739d5fad22351e15d57f017128f92a4431902780bd5",

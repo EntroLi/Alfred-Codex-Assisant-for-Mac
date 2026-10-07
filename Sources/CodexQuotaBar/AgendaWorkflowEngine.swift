@@ -73,7 +73,7 @@ final class AgendaWorkflowEngine {
             }
         }
         return AgendaPreviewRow(operationID: operation.id, before: operation.baseline?.fields,
-            after: operation.action == .delete ? nil : AgendaWorkflowCodec.expectedFields(operation), state: "ready", reason: nil, textDifferences: AgendaWorkflowCodec.textDifferences(operation))
+            after: operation.action == .delete ? nil : AgendaWorkflowCodec.expectedFields(operation), state: "ready", reason: operation.action == .delete ? "Delete only this exact event; original identity recovery is not guaranteed" : nil, textDifferences: AgendaWorkflowCodec.textDifferences(operation))
     }
 
     func preview(_ batch: AgendaBatch) throws -> AgendaPreview {

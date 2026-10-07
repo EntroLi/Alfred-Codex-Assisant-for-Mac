@@ -298,6 +298,14 @@ final class AgendaEventKitStore: AgendaWorkflowStore {
         guard !item.hasRecurrenceRules, !item.hasAttendees, (item as? EKEvent)?.isDetached != true else {
             throw AgendaWorkflowError.invalid("Recurrence/invitation writes unsupported")
         }
+        if operation.action == .delete {
+            guard let event = item as? EKEvent, operation.allowIrrecoverableDelete == true else {
+                throw AgendaWorkflowError.invalid("Explicit single-event no-recovery delete required")
+            }
+            let reference = record(event).reference
+            try store.remove(event, span: .thisEvent, commit: true)
+            return reference
+        }
         if let value = operation.changes["title"] { item.title = value }
         if let event = item as? EKEvent {
             AgendaNativeTextPatch.apply(operation, to: event)
