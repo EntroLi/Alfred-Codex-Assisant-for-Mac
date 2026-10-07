@@ -1530,6 +1530,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
+if CommandLine.arguments.dropFirst().first == "--agenda" {
+    exit(AgendaWorkflowCLI.run(Array(CommandLine.arguments.dropFirst(2))))
+}
+if Bundle.main.object(forInfoDictionaryKey: "AlfredAgendaOnly") as? Bool == true {
+    FileHandle.standardError.write(Data("This development bundle only runs with --agenda; no assistant service started.\n".utf8))
+    exit(2)
+}
+
 let app = NSApplication.shared
 // Also resolve the icon explicitly for direct executable/login-item launches.
 // Notification attachments cannot replace the system's left-hand app icon.

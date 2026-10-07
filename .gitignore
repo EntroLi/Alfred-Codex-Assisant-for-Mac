@@ -41,3 +41,10 @@ evidence/runtime-1.0.2.json
 __pycache__/
 evidence/runtime-1.0.3.json
 evidence/interface-1.0.3/
+
+# Manual calendar workflow: private baselines, approved fields, mappings and receipts.
+.agenda-local/
+
+# Current private runtime observations.
+evidence/runtime-1.1.0.json
+evidence/runtime-1.1.0.log
