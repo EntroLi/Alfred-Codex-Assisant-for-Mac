@@ -41,6 +41,7 @@ enum AgendaPrivacyCommand {
         }
         switch command {
         case "request-calendar-access": return [.event]
+        case "request-reminder-access": return [.reminder]
         case "request-read-access": return [.event, .reminder] // Existing explicit two-entity command.
         default: throw AgendaWorkflowError.invalid("Unknown privacy command")
         }
@@ -52,8 +53,8 @@ enum AgendaPrivacyRequest {
                     status: (AgendaEntity) -> String,
                     request: (AgendaEntity) -> AgendaPrivacyCallback,
                     wait: () -> Void) throws -> AgendaPrivacyReport {
-        guard entities == [.event] || entities == [.event, .reminder], (0...20).contains(maxRechecks) else {
-            throw AgendaWorkflowError.invalid("Explicit calendar-only or legacy calendar-and-reminder selection required")
+        guard entities == [.event] || entities == [.reminder] || entities == [.event, .reminder], (0...20).contains(maxRechecks) else {
+            throw AgendaWorkflowError.invalid("Explicit calendar-only, reminder-only or legacy two-entity selection required")
         }
         var report = AgendaPrivacyReport(selectedEntities: entities, startedAt: AgendaWorkflowCodec.now(),
             finishedAt: AgendaWorkflowCodec.now(), status: "pending", results: [])

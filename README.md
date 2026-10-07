@@ -2,11 +2,11 @@
 
 Alfred 是为 Codex Mac 桌面端制作的个人工作助手：在菜单栏查看周额度和任务状态，在桌面显示额度、日程与待办，用蝙蝠信号提醒需要处理的事情。界面采用黑金 Batman 元素，支持浅色、深色和跟随系统，无独立主窗口。
 
-当前阶段版本：**1.1.1 / build29**。本项目是个人制作的非官方助手，与 OpenAI、Batman 品牌及同名 Alfred 启动器无隶属关系。
+当前阶段版本：**1.2.0 / build30**。本项目是个人制作的非官方助手，与 OpenAI、Batman 品牌及同名 Alfred 启动器无隶属关系。
 
 ## 下载与安装
 
-1. 打开 [Releases 下载页](https://github.com/EntroLi/Alfred-Codex-Assisant-for-Mac/releases/latest)，下载 `Alfred-1.1.1-build29-arm64.zip`。
+1. 打开 [Releases 下载页](https://github.com/EntroLi/Alfred-Codex-Assisant-for-Mac/releases/latest)，下载 `Alfred-1.2.0-build30-arm64.zip`。
 2. 解压，将 `Alfred.app` 移入 `~/Applications`（用户主目录的“应用程序”文件夹，没有时新建），再打开。菜单栏会出现蝙蝠图标。
 3. 这是个人开发、ad hoc 签名的应用，未经过 Apple 公证。若 macOS 阻止打开，请确认下载来源后，在“系统设置 → 隐私与安全性”使用系统提供的“仍要打开”；不要关闭系统安全保护。
 4. 需要日程、待办或系统通知时，在 Alfred 对应页面授权。桌面右键 → 编辑小组件 → 搜索 Alfred → 添加横向组件。
@@ -65,3 +65,7 @@ cd Alfred-Codex-Assisant-for-Mac
 开发说明见 [开发文档](docs/开发文档.md)，组件实现见 [Widget/README](Widget/README.md)，发布记录见 [CHANGELOG](CHANGELOG.md)。源码公开用于备份和分享；仓库未声明统一开源许可证，第三方视觉素材的权利不因公开而转移。
 
 日常修改在本地推进；完成可验收的阶段后再提升版本、同步公开源码并发布，避免为每个小改动生成发行版。
+
+## 提醒手动协作
+
+1.2.0增加精确提醒备注、完成/恢复及受保护单项删除；父子任务关系公开接口不可用，已有事项完成/恢复/删除须本人核对原生界面为独立事项，未知保持阻塞。常规菜单和日历继续原行为。详见[调用与验收说明](docs/提醒手动协作.md)。

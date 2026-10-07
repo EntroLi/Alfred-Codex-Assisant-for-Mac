@@ -53,6 +53,15 @@ struct AgendaOperation: Codable, Equatable {
     var notesMode: AgendaNotesMode? = nil
     // Explicitly approved single-event deletion; no guarantee of restoring original identity.
     var allowIrrecoverableDelete: Bool? = nil
+    // Human native-UI check, bound to this exact baseline; public EventKit cannot inspect hierarchy.
+    var reminderStandaloneReview: AgendaReminderStandaloneReview? = nil
+}
+
+struct AgendaReminderStandaloneReview: Codable, Equatable {
+    var baselineSHA256: String
+    var reviewedAt: String
+    var reviewedBy: String
+    var statement: String
 }
 
 struct AgendaBatch: Codable, Equatable {
@@ -80,6 +89,7 @@ struct AgendaPreviewRow: Codable {
     var state: String
     var reason: String?
     var textDifferences: [AgendaTextDifference]? = nil
+    var reminderWarnings: [String]? = nil
 }
 
 struct AgendaTextDifference: Codable {
@@ -102,7 +112,7 @@ struct AgendaTargetReadRequest: Codable {
     var fields: [String]
     func validate() throws {
         guard !targets.isEmpty, targets.count <= 100, !fields.isEmpty,
-              fields == Array(Set(fields)).sorted(), Set(fields).isSubset(of: AgendaWorkflowCodec.textFields),
+              fields == Array(Set(fields)).sorted(), targets.allSatisfy({ Set(fields).isSubset(of: AgendaWorkflowCodec.projectionFields($0.entity)) }),
               Set(try targets.map { try AgendaWorkflowCodec.hash($0) }).count == targets.count else {
             throw AgendaWorkflowError.invalid("Exact unique targets and sorted explicit location/notes projection required (max 100)")
         }
@@ -141,6 +151,7 @@ struct AgendaOperationReceipt: Codable {
     var readback: AgendaRecord?
     var reason: String?
     var recoveryCandidates: [AgendaRecord]? = nil
+    var reminderWarnings: [String]? = nil
 }
 
 struct AgendaReceipt: Codable {
@@ -188,12 +199,46 @@ enum AgendaNativeTextPatch {
 
 enum AgendaWorkflowCodec {
     static let textFields: Set<String> = ["location", "notes"]
+    static func projectionFields(_ entity: AgendaEntity) -> Set<String> {
+        entity == .event ? textFields : ["notes", "completionDate"]
+    }
     static func validateTextTarget(_ target: AgendaReference) throws {
-        guard target.entity == .event, !target.sourceID.isEmpty, !target.calendarID.isEmpty,
-              !target.appleID.isEmpty, let start = target.occurrenceStart else {
-            throw AgendaWorkflowError.invalid("Text reads require an exact event source/calendar/Apple ID/occurrence; no reminder text reads")
+        guard !target.sourceID.isEmpty, !target.calendarID.isEmpty, !target.appleID.isEmpty else {
+            throw AgendaWorkflowError.invalid("Exact source/calendar/Apple ID required")
         }
-        _ = try date(start)
+        if target.entity == .event {
+            guard let start = target.occurrenceStart else { throw AgendaWorkflowError.invalid("Event occurrence required") }
+            _ = try date(start)
+        } else if target.occurrenceStart != nil {
+            throw AgendaWorkflowError.invalid("Reminder identity must not carry an event occurrence")
+        }
+    }
+    static func reminderWarnings(_ operation: AgendaOperation) -> [String]? {
+        guard operation.target.entity == .reminder else { return nil }
+        var warnings = ["Native parent/child relationships UNKNOWN: public EventKit has no supported relationship accessor; flat records are not proof of standalone status"]
+        if operation.changes["isCompleted"] != nil || operation.action == .delete {
+            warnings += ["Fresh human native-UI standalone review is required; parent actions can affect children and hierarchy-only concurrent edits cannot be detected"]
+        }
+        if operation.action == .delete {
+            warnings += ["EventKit restore/undo unsupported; native Recently Deleted recovery depends on account/OS and is not verified; original ID recovery is not guaranteed; JSON is evidence only"]
+        }
+        return warnings
+    }
+    static func validateReminderReview(_ op: AgendaOperation, requireFresh: Bool = false) throws {
+        let sensitive = op.target.entity == .reminder && (op.action == .delete || op.changes["isCompleted"] != nil)
+        if sensitive {
+            guard let baseline = op.baseline, let review = op.reminderStandaloneReview,
+                  review.reviewedBy == "human-user", review.statement == "Native UI verified standalone; no parent or children",
+                  review.baselineSHA256 == (try hash(baseline)) else {
+                throw AgendaWorkflowError.invalid("Reminder hierarchy UNKNOWN; exact native-UI standalone review required before completion/reopen/delete")
+            }
+            let stamp = try date(review.reviewedAt)
+            if requireFresh, !(-60...900).contains(Date().timeIntervalSince(stamp)) {
+                throw AgendaWorkflowError.invalid("Standalone review expired; recheck native UI and preview again")
+            }
+        } else if op.reminderStandaloneReview != nil {
+            throw AgendaWorkflowError.invalid("Standalone review must only accompany reminder completion/reopen/delete")
+        }
     }
     static func projection(_ operation: AgendaOperation) -> [String] {
         Set(operation.baseline?.projectedFields ?? []).union(Set(operation.changes.keys).intersection(textFields))
@@ -210,7 +255,14 @@ enum AgendaWorkflowCodec {
     static func confirms(_ current: AgendaRecord?, operation: AgendaOperation, reference: AgendaReference) -> Bool {
         guard let current else { return false }
         let projection = projection(operation)
-        return current.reference == reference && current.fields == expectedFields(operation) &&
+        var observed = current.fields, expected = expectedFields(operation)
+        if operation.target.entity == .reminder, let completed = operation.changes["isCompleted"] {
+            // EventKit assigns completionDate when completing; do not forge a timestamp.
+            // Other clients may legitimately expose completed=true with no completionDate.
+            if completed == "false", observed["completionDate"] != nil { return false }
+            observed.removeValue(forKey: "completionDate"); expected.removeValue(forKey: "completionDate")
+        }
+        return current.reference == reference && observed == expected &&
             (current.projectedFields ?? []) == projection && !current.recurring && !current.hasAttendees
     }
     static func data<T: Encodable>(_ value: T) throws -> Data {
@@ -229,6 +281,7 @@ enum AgendaWorkflowCodec {
         var fields = operation.baseline?.fields ?? (operation.target.entity == .reminder ?
             ["dueDate": "", "dueTime": "", "dueTimeZone": "", "priority": "0", "isCompleted": "false"] : [:])
         fields.merge(operation.changes) { _, new in new }
+        if operation.target.entity == .reminder, operation.changes["isCompleted"] != nil { fields.removeValue(forKey: "completionDate") }
         if operation.notesMode == .append, let addition = operation.changes["notes"] {
             let previous = operation.baseline?.fields["notes"] ?? ""
             fields["notes"] = previous.isEmpty ? addition : previous + "\n\n" + addition
@@ -262,26 +315,26 @@ enum AgendaWorkflowCodec {
             throw AgendaWorkflowError.invalid("Explicit IDs required; series and native parent/child operations unsupported")
         }
         let allowed: Set<String> = op.target.entity == .event ?
-            ["title", "start", "end", "allDay", "timeZone", "location", "notes"] : ["title", "dueDate", "dueTime", "dueTimeZone", "priority"]
+            ["title", "start", "end", "allDay", "timeZone", "location", "notes"] : ["title", "dueDate", "dueTime", "dueTimeZone", "priority", "notes", "isCompleted"]
         guard Set(op.changes.keys).isSubset(of: allowed) else {
             throw AgendaWorkflowError.invalid("Unsupported field: only title/time/location/notes patches; category is identity, not writable")
         }
         if op.action == .delete {
-            guard op.target.entity == .event, op.allowIrrecoverableDelete == true,
+            guard op.allowIrrecoverableDelete == true,
                   op.changes.isEmpty, op.clearFields == nil, op.notesMode == nil else {
-                throw AgendaWorkflowError.invalid("Single-event deletion requires explicit no-recovery acknowledgement and no patches")
+                throw AgendaWorkflowError.invalid("Single-item deletion requires explicit no-recovery acknowledgement and no patches")
             }
         } else if op.allowIrrecoverableDelete != nil {
             throw AgendaWorkflowError.invalid("Delete acknowledgement on non-delete operation")
         }
+        try validateReminderReview(op)
         let clear = op.clearFields ?? []
-        guard clear == Array(Set(clear)).sorted(), Set(clear).isSubset(of: textFields),
-              Set(clear).isDisjoint(with: Set(op.changes.keys)), op.target.entity == .event || clear.isEmpty && op.notesMode == nil else {
-            throw AgendaWorkflowError.invalid("Only event location/notes may be explicitly cleared; no overlapping patches")
+        guard clear == Array(Set(clear)).sorted(), Set(clear).isSubset(of: op.target.entity == .event ? textFields : ["notes"]),
+              Set(clear).isDisjoint(with: Set(op.changes.keys)) else {
+            throw AgendaWorkflowError.invalid("Only event location/notes or reminder notes may be cleared; no overlapping patches")
         }
         if let projection = op.baseline?.projectedFields {
-            guard projection == Array(Set(projection)).sorted(), Set(projection).isSubset(of: textFields),
-                  op.target.entity == .event else { throw AgendaWorkflowError.invalid("Invalid baseline text projection") }
+            guard projection == Array(Set(projection)).sorted(), Set(projection).isSubset(of: projectionFields(op.target.entity)) else { throw AgendaWorkflowError.invalid("Invalid baseline text projection") }
         }
         let projected = Set(op.baseline?.projectedFields ?? [])
         let carriedText = Set(op.baseline?.fields.keys.map { $0 } ?? []).intersection(textFields)
@@ -306,8 +359,8 @@ enum AgendaWorkflowCodec {
                   !op.target.appleID.isEmpty, baseline.modifiedAt != nil else {
                 throw AgendaWorkflowError.invalid("Modification requires exact identity and a versioned baseline")
             }
-            if baseline.hasAttendees || baseline.recurring || op.target.entity == .reminder && op.action == .delete {
-                throw AgendaWorkflowError.invalid("Invitations, recurring item writes and reminder deletion require manual handling in v1")
+            if baseline.hasAttendees || baseline.recurring {
+                throw AgendaWorkflowError.invalid("Invitations and recurring/detached item writes require manual handling")
             }
             if op.action == .update && op.changes.isEmpty && clear.isEmpty { throw AgendaWorkflowError.invalid("Empty update") }
         }
@@ -323,6 +376,13 @@ enum AgendaWorkflowCodec {
                 throw AgendaWorkflowError.invalid("Valid event dates/allDay/timeZone required")
             }
         } else {
+            if op.action != .create { try validateTextTarget(op.target) }
+            if let completion = op.changes["isCompleted"] {
+                guard op.action == .update, ["true", "false"].contains(completion), projected.contains("completionDate") else {
+                    throw AgendaWorkflowError.invalid("Completion/reopen requires an existing exact reminder and completionDate projection; no user-supplied completion timestamp")
+                }
+            }
+            if let value = fields["isCompleted"], !["true", "false"].contains(value) { throw AgendaWorkflowError.invalid("Invalid completion state") }
             guard let priority = Int(fields["priority"] ?? "0"), (0...9).contains(priority) else {
                 throw AgendaWorkflowError.invalid("Reminder priority must be 0...9")
             }

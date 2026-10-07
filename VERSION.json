@@ -1,6 +1,6 @@
 {
-  "version": "1.1.1",
-  "build": "29",
+  "version": "1.2.0",
+  "build": "30",
   "displayName": "Alfred",
   "bundleID": "local.codex.quota-bar"
 }

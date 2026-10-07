@@ -31,9 +31,11 @@ struct AgendaReadResult: Codable {
     var records: [AgendaRecord]
     var reminderScope = "All completed and incomplete reminders in the selected lists"
     var writeAuthorization = "none"
+    var reminderHierarchy = "UNKNOWN: public EventKit has no parent/child relation access; returned reminders are flat"
 }
 
 extension EKCalendarItem: AgendaNativeTextItem {}
+extension EKReminder: AgendaNativeReminderItem {}
 
 final class AgendaEventKitStore: AgendaWorkflowStore {
     private lazy var store = EKEventStore()
@@ -159,6 +161,7 @@ final class AgendaEventKitStore: AgendaWorkflowStore {
         }
         if projectedFields.contains("location") { fields["location"] = item.location }
         if projectedFields.contains("notes") { fields["notes"] = item.notes }
+        if projectedFields.contains("completionDate") { fields["completionDate"] = reminder?.completionDate.map { formatter.string(from: $0) } }
         return AgendaRecord(reference: AgendaReference(entity: event == nil ? .reminder : .event,
             sourceID: item.calendar.source.sourceIdentifier, calendarID: item.calendar.calendarIdentifier,
             appleID: item.calendarItemIdentifier, occurrenceStart: event.map { formatter.string(from: $0.startDate) }),
@@ -189,7 +192,7 @@ final class AgendaEventKitStore: AgendaWorkflowStore {
     }
     func read(_ reference: AgendaReference, projectedFields: [String]) throws -> AgendaRecord? {
         guard projectedFields == Array(Set(projectedFields)).sorted(),
-              Set(projectedFields).isSubset(of: AgendaWorkflowCodec.textFields) else {
+              Set(projectedFields).isSubset(of: AgendaWorkflowCodec.projectionFields(reference.entity)) else {
             throw AgendaWorkflowError.invalid("Unsupported text projection")
         }
         if !projectedFields.isEmpty { try AgendaWorkflowCodec.validateTextTarget(reference) }
@@ -298,12 +301,13 @@ final class AgendaEventKitStore: AgendaWorkflowStore {
         guard !item.hasRecurrenceRules, !item.hasAttendees, (item as? EKEvent)?.isDetached != true else {
             throw AgendaWorkflowError.invalid("Recurrence/invitation writes unsupported")
         }
+        try AgendaWorkflowCodec.validateReminderReview(operation, requireFresh: true)
         if operation.action == .delete {
-            guard let event = item as? EKEvent, operation.allowIrrecoverableDelete == true else {
-                throw AgendaWorkflowError.invalid("Explicit single-event no-recovery delete required")
-            }
-            let reference = record(event).reference
-            try store.remove(event, span: .thisEvent, commit: true)
+            guard operation.allowIrrecoverableDelete == true else { throw AgendaWorkflowError.invalid("Explicit no-recovery acknowledgement required") }
+            let reference = record(item).reference
+            if let event = item as? EKEvent { try store.remove(event, span: .thisEvent, commit: true) }
+            else if let reminder = item as? EKReminder { try store.remove(reminder, commit: true) }
+            else { throw AgendaWorkflowError.invalid("Unsupported item deletion") }
             return reference
         }
         if let value = operation.changes["title"] { item.title = value }
@@ -315,14 +319,7 @@ final class AgendaEventKitStore: AgendaWorkflowStore {
             if let zone = operation.changes["timeZone"] { event.timeZone = zone.isEmpty ? nil : TimeZone(identifier: zone) }
             try store.save(event, span: .thisEvent, commit: true)
         } else if let reminder = item as? EKReminder {
-            let fields = AgendaWorkflowCodec.expectedFields(operation)
-            if operation.changes.keys.contains(where: { $0.hasPrefix("due") }) {
-                if let originalCalendar = reminder.dueDateComponents?.calendar, originalCalendar.identifier != .gregorian {
-                    throw AgendaWorkflowError.invalid("Non-Gregorian reminder date requires manual handling")
-                }
-                reminder.dueDateComponents = try AgendaDateComponents.parse(date: fields["dueDate"] ?? "", time: fields["dueTime"] ?? "", zone: fields["dueTimeZone"] ?? "")
-            }
-            if let priority = operation.changes["priority"] { reminder.priority = Int(priority)! }
+            try AgendaNativeReminderPatch.apply(operation, to: reminder)
             try store.save(reminder, commit: true)
         }
         return record(item).reference

@@ -21,17 +21,28 @@ enum AgendaWorkflowCLI {
             case "status":
                 guard args.count == 1 else { throw AgendaWorkflowError.invalid("status takes no arguments") }
                 try output(AgendaEventKitStore.permissions())
+            case "reminder-status":
+                guard args.count == 1 else { throw AgendaWorkflowError.invalid("reminder-status takes no arguments") }
+                try output(["reminder": AgendaEventKitStore.permissionStatus(.reminder), "checkedAt": AgendaWorkflowCodec.now(),
+                            "bundleID": Bundle.main.bundleIdentifier ?? "unbundled", "bundlePath": Bundle.main.bundlePath,
+                            "privacyRequest": "none", "AppleReads": "none", "AppleWrites": "none"])
+            case "capabilities":
+                guard args.count == 1 else { throw AgendaWorkflowError.invalid("capabilities takes no arguments") }
+                try output(AgendaReminderCapabilities.current(permission: AgendaEventKitStore.permissionStatus(.reminder)))
+            case "reminder-inventory":
+                guard args.count == 1 else { throw AgendaWorkflowError.invalid("reminder-inventory takes no arguments") }
+                try output(store.inventory([.reminder]))
             case "inventory":
                 guard args.count == 1 else { throw AgendaWorkflowError.invalid("inventory takes no arguments") }
                 try output(store.inventory())
-            case "request-read-access", "request-calendar-access":
+            case "request-read-access", "request-calendar-access", "request-reminder-access":
                 let entities = try AgendaPrivacyCommand.entities(command: command, arguments: args)
                 try output(store.requestReadPrivacyAccess(entities: entities))
             case "read":
                 guard args.count == 2 else { throw AgendaWorkflowError.invalid("read requires an explicit request file; no implicit all-data read") }
                 try output(store.readAll(decode(AgendaReadRequest.self, args[1])))
             case "read-targets":
-                guard args.count == 2 else { throw AgendaWorkflowError.invalid("read-targets requires exact event identities and explicit location/notes fields") }
+                guard args.count == 2 else { throw AgendaWorkflowError.invalid("read-targets requires exact identities and explicit supported projection fields") }
                 try output(store.readTargets(decode(AgendaTargetReadRequest.self, args[1])))
             case "preview":
                 guard args.count == 3 else { throw AgendaWorkflowError.invalid("preview requires batch and ledger directory") }

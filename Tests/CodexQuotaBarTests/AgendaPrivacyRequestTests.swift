@@ -31,6 +31,24 @@ struct AgendaPrivacyRequestTests {
         #expect(report.results.count == 1 && report.results[0].requestCount == 1)
         #expect(report.AppleReads == "none" && report.AppleWrites == "none")
     }
+    @Test func reminderOnlyNeverTouchesCalendarAndSkipsAlreadyGranted() throws {
+        let simulation = PrivacySimulation(), command = "request-reminder-access"
+        let selected = try AgendaPrivacyCommand.entities(command: command, arguments: [command, "--user-approved-privacy-request"])
+        let report = try simulation.run(selected)
+        #expect(report.status == "verified" && simulation.requests == [.reminder])
+        #expect(simulation.statusEntities.allSatisfy { $0 == .reminder })
+        simulation.requests = []; simulation.statusEntities = []; simulation.values[.reminder] = ["fullAccess"]
+        let again = try simulation.run(selected)
+        #expect(again.results[0].requestCount == 0 && simulation.requests.isEmpty)
+        #expect(simulation.statusEntities == [.reminder])
+    }
+    @Test func reminderOnlyTimeoutAndDenialStopWithoutCalendarRequest() throws {
+        for callback in [AgendaPrivacyCallback(granted: nil, error: nil, timedOut: true), AgendaPrivacyCallback(granted: false, error: nil)] {
+            let simulation = PrivacySimulation(); simulation.callbacks[.reminder] = callback
+            #expect(throws: AgendaPrivacyFailure.self) { try simulation.run([.reminder]) }
+            #expect(simulation.requests == [.reminder] && simulation.statusEntities == [.reminder])
+        }
+    }
     @Test func alreadyAuthorizedDoesNotRequestAgain() throws {
         for value in ["fullAccess", "authorized-legacy"] {
             let simulation = PrivacySimulation(); simulation.values[.event] = [value]
@@ -44,7 +62,7 @@ struct AgendaPrivacyRequestTests {
             #expect(throws: (any Error).self) { try AgendaPrivacyCommand.entities(command: "request-calendar-access", arguments: args) }
         }
         let simulation = PrivacySimulation()
-        for selected in [[], [.reminder], [.event, .event]] as [[AgendaEntity]] {
+        for selected in [[], [.reminder, .event], [.event, .event]] as [[AgendaEntity]] {
             #expect(throws: (any Error).self) { try simulation.run(selected) }
         }
         #expect(simulation.requests.isEmpty && simulation.statusEntities.isEmpty)

@@ -61,6 +61,7 @@ final class AgendaWorkflowEngine {
     init(store: AgendaWorkflowStore, ledger: AgendaWorkflowLedger) { self.store = store; self.ledger = ledger }
 
     private func inspect(_ operation: AgendaOperation) throws -> AgendaPreviewRow {
+        try AgendaWorkflowCodec.validateReminderReview(operation, requireFresh: true)
         if let mapped = try ledger.mapped(operation.externalID), mapped != operation.target {
             throw AgendaWorkflowError.invalid("External identifier is already mapped; do not recreate or rebind automatically")
         }
@@ -73,7 +74,7 @@ final class AgendaWorkflowEngine {
             }
         }
         return AgendaPreviewRow(operationID: operation.id, before: operation.baseline?.fields,
-            after: operation.action == .delete ? nil : AgendaWorkflowCodec.expectedFields(operation), state: "ready", reason: operation.action == .delete ? "Delete only this exact event; original identity recovery is not guaranteed" : nil, textDifferences: AgendaWorkflowCodec.textDifferences(operation))
+            after: operation.action == .delete ? nil : AgendaWorkflowCodec.expectedFields(operation), state: "ready", reason: operation.action == .delete ? "Delete only this exact item; native recovery is not verified and original identity recovery is not guaranteed" : nil, textDifferences: AgendaWorkflowCodec.textDifferences(operation), reminderWarnings: AgendaWorkflowCodec.reminderWarnings(operation))
     }
 
     func preview(_ batch: AgendaBatch) throws -> AgendaPreview {
@@ -86,7 +87,7 @@ final class AgendaWorkflowEngine {
         let rows = batch.operations.map { operation -> AgendaPreviewRow in
             do { return try inspect(operation) }
             catch { return AgendaPreviewRow(operationID: operation.id, before: operation.baseline?.fields,
-                after: operation.action == .delete ? nil : AgendaWorkflowCodec.expectedFields(operation), state: "blocked", reason: String(describing: error), textDifferences: AgendaWorkflowCodec.textDifferences(operation)) }
+                after: operation.action == .delete ? nil : AgendaWorkflowCodec.expectedFields(operation), state: "blocked", reason: String(describing: error), textDifferences: AgendaWorkflowCodec.textDifferences(operation), reminderWarnings: AgendaWorkflowCodec.reminderWarnings(operation)) }
         }
         return AgendaPreview(batch: batch, previewSHA256: try AgendaWorkflowCodec.hash(batch), previewedAt: AgendaWorkflowCodec.now(), rows: rows)
     }
@@ -128,7 +129,7 @@ final class AgendaWorkflowEngine {
             device: ProcessInfo.processInfo.hostName, startedAt: AgendaWorkflowCodec.now(),
             results: batch.operations.map { AgendaOperationReceipt(operationID: $0.id,
                 status: approval.operationIDs.contains($0.id) ? "pending" : "skipped", appleReference: nil, readback: nil,
-                reason: approval.operationIDs.contains($0.id) ? nil : "Outside approved subset") })
+                reason: approval.operationIDs.contains($0.id) ? nil : "Outside approved subset", reminderWarnings: AgendaWorkflowCodec.reminderWarnings($0)) })
         // Preflight every approved row before the first write; one conflict invalidates this preview.
         try verifySource(batch.source, sourceNow())
         for operation in batch.operations where approval.operationIDs.contains(operation.id) {

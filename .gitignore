@@ -51,3 +51,8 @@ evidence/runtime-1.1.0.log
 
 evidence/runtime-1.1.1.json
 evidence/runtime-1.1.1.log
+
+evidence/runtime-1.2.0.json
+evidence/runtime-1.2.0.log
+
+evidence/rollback-*.zip
