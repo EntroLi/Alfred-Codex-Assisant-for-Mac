@@ -1,15 +1,15 @@
 {
-  "version": "1.2.0",
-  "build": "30",
-  "sourceCommit": "56ac1f5eca08ffc74abd4bd311725eee8c2d0df8",
-  "exportedAt": "2026-10-07T12:51:33.628509+00:00",
+  "version": "1.2.1",
+  "build": "31",
+  "sourceCommit": "1c849005a7aa14a4bd8bfac527be9a58605317b4",
+  "exportedAt": "2026-10-24T07:42:37.924793+00:00",
   "scope": "Current source snapshot; no original local Git history or runtime data",
   "transformations": [
     "Public documentation replaces private handoff/evidence",
     "Idle-action provenance contains filenames only"
   ],
   "sourceHashes": {
-    "Sources/CodexQuotaBar/ActivityState.swift": "4492112e5c278ad62705dd2ad6c4516756dddef04aceed18d765426611b9fbb7",
+    "Sources/CodexQuotaBar/ActivityState.swift": "599aaa0cb6e7f894c41b89de228d0877adb735e23747f1a42bc330d68272f111",
     "Sources/CodexQuotaBar/AgendaEventKitStore.swift": "6d00e0f54e4e9f409b8a7f782d94133de9c406b0fb2f138157b8b1eafe5311ad",
     "Sources/CodexQuotaBar/AgendaModels.swift": "1f33db75a06c70fade7b8c274d8f14bd8b320e50b042327f50b826f6bad3afc1",
     "Sources/CodexQuotaBar/AgendaPrivacyRequest.swift": "138f6124d92962b69fa08357e77f24d4de9f0f11c24f667edba4f19efd19453d",
@@ -18,11 +18,11 @@
     "Sources/CodexQuotaBar/AgendaWorkflowEngine.swift": "59ff22bc467de4b58a51edf9101422cd66c64059e6a07e1d72cc2550cfeb0673",
     "Sources/CodexQuotaBar/AgendaWorkflowModels.swift": "a3b4bac93173e24b2844fffd83f6791d3afa25a56faabbe728aee61aaa533f31",
     "Sources/CodexQuotaBar/AlfredControls.swift": "c7461a805f3caf8c5d2b59453849cb933f6f369b908f98ef611ece8e91334ffe",
-    "Sources/CodexQuotaBar/AlfredNotifications.swift": "7ece1c666a5c443e10af7a3a0db0f1d221a715b8d289d28cd56bfc5068e5aba4",
+    "Sources/CodexQuotaBar/AlfredNotifications.swift": "7d97f7d2203d9f21054ae3bb3e9070a6f0999897a7cd80855831f69468751cdf",
     "Sources/CodexQuotaBar/AlfredPanelPresenter.swift": "d7bfe54b7341c185900fb739d5fad22351e15d57f017128f92a4431902780bd5",
     "Sources/CodexQuotaBar/AlfredTheme.swift": "7227b4a452fd3a5068b0b53ecae8aa0ab6bd7b6c1ac780503e3e9f162df87f4a",
-    "Sources/CodexQuotaBar/AssistantCore.swift": "7a5b65c23b4ce885332fbdf2ccc8c58e9471508afdb6f4dd51ebf619b23245be",
-    "Sources/CodexQuotaBar/AssistantViews.swift": "cc4755765acc4fa8d4417995c761d4210efb62ec0fe3c91f23a643645b83b384",
+    "Sources/CodexQuotaBar/AssistantCore.swift": "846f3364152e800eab727f0b161b83c5f4027df1b33fe35e7ebf0e17a400027b",
+    "Sources/CodexQuotaBar/AssistantViews.swift": "39c0987e2d22325258cdc2b72979126a56d7e752c0dcc9cbf694476879581246",
     "Sources/CodexQuotaBar/ButlerNavigation.swift": "037a0bf46105887d255c20c7db8df8b5a67ab9698c5de816571c088220d23992",
     "Sources/CodexQuotaBar/DesktopSticker.swift": "bb31025fc678bb4f9573ad419962b1a908c79aab24c6b0b9282f7f41019aa94d",
     "Sources/CodexQuotaBar/DesktopWidgetSnapshot.swift": "4a2699cffe6967d9d29c5b207e86360f931fa4a05aceca6289a53091ee2b58f2",
@@ -34,7 +34,7 @@
     "Sources/CodexQuotaBar/RuntimeVerification.swift": "32292f80bfdac7d771634af24690deb8009ad0abf68184add33dedbe95545db6",
     "Sources/CodexQuotaBar/UsageAnalytics.swift": "8a0a0a74b52f86112886f28af478b97305b06fe833cdf103b87e593b61feddcc",
     "Sources/CodexQuotaBar/UsagePanel.swift": "752ea2aeb834f9c035f29d89d699e7fa136e1f02a59ded9fa976437ef0b1a8bb",
-    "Sources/CodexQuotaBar/WorkBreakReminder.swift": "fad8639720f11cd303e6ed6b95dcd3d58f4f167ee7d297ab480a80431602ef90",
-    "Sources/CodexQuotaBar/main.swift": "bf4a9fc107de0a864c17d6267f188967c100a83be63c03cd2b31b06dc0873704"
+    "Sources/CodexQuotaBar/WorkBreakReminder.swift": "0c3b7f5a164c434ed1fbf68b32aba85416bfb5082bd694568c11179497148987",
+    "Sources/CodexQuotaBar/main.swift": "688670f448d51895f23216cb95bb350e31406bcf172a90a80105daa9a173c3b8"
   }
 }

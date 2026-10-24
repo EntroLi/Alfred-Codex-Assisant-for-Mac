@@ -50,16 +50,46 @@ struct AssistantCoreTests {
         let suite = "alfred.test.\(UUID())", defaults = UserDefaults(suiteName: suite)!
         defer { defaults.removePersistentDomain(forName: suite) }
         let inbox = AssistantInbox(defaults: defaults), now = start.addingTimeInterval(86400)
+        var delivered: [AssistantNotice] = []
+        inbox.onNotify = { delivered.append($0) }
         inbox.observe(pace: pace(used: 21, days: 1)!, now: now)
         inbox.observe(pace: pace(used: 21, days: 1)!, now: now)
-        #expect(inbox.unreadCount == 1)
-        inbox.acknowledge(inbox.notices[0].id)
-        inbox.observe(pace: pace(used: 21, days: 1)!, now: now)
-        #expect(inbox.unreadCount == 0)
+        #expect(delivered.count == 1 && inbox.unreadCount == 0)
         inbox.observe(pace: pace(used: 22, days: 1)!, now: now)
-        #expect(inbox.unreadCount == 1)
-        #expect(inbox.notices[0].title.contains("50%"))
+        #expect(delivered.count == 2 && inbox.notices.isEmpty)
+        #expect(delivered.last?.title.contains("50%") == true)
     }
+    @Test func legacyRoutineNoticesDoNotCountAndReadAllNeverReissuesQuestions() throws {
+        let suite = "alfred.test.\(UUID())", defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let old = AssistantNoticeArchive(notices: [
+            AssistantNotice(id: "old-break", kind: "break", title: "活动", body: "", createdAt: start),
+            AssistantNotice(id: "old-quota", kind: "quota", title: "额度", body: "", createdAt: start)])
+        defaults.set(try JSONEncoder().encode(old), forKey: "Alfred.inbox.v1")
+        let inbox = AssistantInbox(defaults: defaults)
+        #expect(inbox.unreadCount == 0)
+        let item = CodexActivitySnapshot(kind: .waitingQuestion, sessionName: "任务", updatedAt: start,
+            sessionID: "thread", attentionContext: "正在确认方案\n选择哪个方案？", attentionAt: start, attentionID: "question-1")
+        inbox.observe(activities: [item], now: start.addingTimeInterval(400))
+        #expect(inbox.notices.first?.createdAt == start)
+        #expect(inbox.notices.first?.body.contains("选择哪个方案？") == true)
+        #expect(inbox.acknowledgeAll().count == 1)
+        inbox.observe(activities: [item])
+        #expect(inbox.unreadCount == 0)
+        let reloaded = AssistantInbox(defaults: defaults)
+        reloaded.observe(activities: [item])
+        #expect(reloaded.unreadCount == 0)
+    }
+    @Test func returningToWorkRemovesResolvedSignalWithoutAnsweringAnything() {
+        let suite = "alfred.test.\(UUID())", defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let inbox = AssistantInbox(defaults: defaults)
+        inbox.observe(activities: [CodexActivitySnapshot(kind: .waitingQuestion, sessionName: "任务", updatedAt: start, sessionID: "t")])
+        #expect(inbox.unreadCount == 1)
+        inbox.observe(activities: [CodexActivitySnapshot(kind: .thinking, sessionName: "任务", updatedAt: start, sessionID: "t")])
+        #expect(inbox.unreadCount == 0)
+    }
+
     @Test func snoozeAndPendingSurviveSerializationWithoutCountingSleep() throws {
         var progress = BreakProgress(accumulated: 123)
         progress.due(now: start); progress.snooze(now: start)

@@ -89,6 +89,9 @@ struct CodexActivitySnapshot {
     let updatedAt: Date
     var sessionID: String? = nil
     var completedAt: Date? = nil
+    var attentionContext: String? = nil
+    var attentionAt: Date? = nil
+    var attentionID: String? = nil
 
     static let idle = CodexActivitySnapshot(kind: .idle, sessionName: nil, updatedAt: Date())
 
@@ -184,7 +187,8 @@ final class CodexStatusMonitor {
                 sessionName: displayName(for: file, metadata: head + "\n" + tail, threadNames: threadNames),
                 updatedAt: state.updatedAt ?? modifiedAt,
                 sessionID: sessionID(from: file),
-                completedAt: state.active == false ? state.completedAt : nil
+                completedAt: state.active == false ? state.completedAt : nil,
+                attentionContext: state.attentionContext, attentionAt: state.attentionAt, attentionID: state.attentionID
             ))
         }
 
@@ -1056,6 +1060,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panel.updateDesktop(visible: desktopSticker.isVisible)
         panel.onOpenThread = { [weak self] id in self?.openThread(id) }
         panel.assistantBoard.onAcknowledge = { [weak self] id in self?.acknowledgeNotice(id) }
+        panel.assistantBoard.onAcknowledgeAll = { [weak self] in
+            guard let self else { return }
+            let ids = inbox.acknowledgeAll()
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ids)
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids)
+        }
         panel.assistantBoard.onOpenNotice = { [weak self] notice in self?.openNotice(notice) }
         panel.assistantBoard.onSnooze = { [weak self] in self?.workBreakReminder.snooze() }
         panel.assistantBoard.onBreakDone = { [weak self] in self?.workBreakReminder.completedBreak() }
@@ -1350,7 +1360,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         data["interface"] = panel.interfaceDiagnostics
         data["detailPanel"] = ["visible": detailPresenter.isShown, "nonactivating": true, "joinsAllSpaces": true, "fullScreenAuxiliary": true, "cycleCount": threadCycle.candidates.count]
-        data["assistant"] = ["unreadCount": inbox.unreadCount, "pendingBreak": reminderState?.pending ?? false, "activeSecondsToday": workBreakReminder.activeSecondsToday, "completedBreaksToday": workBreakReminder.breaksToday, "notificationError": assistantNotificationError ?? "", "pace": currentPace?.description ?? "unavailable"]
+        data["assistant"] = ["notificationDisplaySeconds": AlfredNotifications.displayDuration, "routineNoticesCountAsTodos": false, "readAllAvailable": true, "unreadCount": inbox.unreadCount, "pendingBreak": reminderState?.pending ?? false, "activeSecondsToday": workBreakReminder.activeSecondsToday, "completedBreaksToday": workBreakReminder.breaksToday, "notificationError": assistantNotificationError ?? "", "pace": currentPace?.description ?? "unavailable"]
         data["agenda"] = agendaService.snapshot.diagnostics
         data["dailyBrief"] = ["source": "local-calendar-reminders-codex", "cloudSync": false, "automaticExternalSend": false]
         data["desktopWidget"] = nativeWidget.diagnostics
@@ -1396,6 +1406,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             activeSeconds: workBreakReminder.activeSecondsToday, breaks: workBreakReminder.breaksToday)
         currentBrief = brief.summary; currentTodos = brief.todos
         panel.assistantBoard.updateDailyTodos(currentTodos)
+        panel.assistantBoard.breakPending = reminderState?.pending ?? false
         panel.updateAssistant(notices: inbox.notices, pace: currentPace, brief: currentBrief, agenda: agendaText,
                               butlerStatus: assistantNotificationError.map { butlerStatus + "\n通知：" + $0 } ?? butlerStatus)
         let percent = latestSnapshot?.weekly.map { "\(Int($0.remainingPercent.rounded()))%" } ?? (lastQuotaError == nil ? "--%" : "?")
@@ -1470,7 +1481,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         else if notice.kind == "calendar" { openAgendaApp(reminders: false) }
         else if notice.kind == "todo" { openAgendaApp(reminders: true) }
         else { showAssistantPopover() }
-        // Opening a task never approves or answers it. It remains pinned until explicitly read.
+        // Opening a task never approves, answers or marks it as read.
     }
     private func showAssistantPopover() {
         panel.showAssistantPage()

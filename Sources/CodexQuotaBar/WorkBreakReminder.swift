@@ -120,6 +120,7 @@ final class WorkBreakReminder: NSObject, UNUserNotificationCenterDelegate {
     }
 
     func start() {
+        AlfredNotifications.startTransientDelivery()
         clock.resume(at: Date()); activityClock.resume(at: Date())
         let snooze = UNNotificationAction(identifier: "break-snooze", title: "稍后5分钟", options: [])
         let done = UNNotificationAction(identifier: "break-done", title: "已活动", options: [])
@@ -134,6 +135,7 @@ final class WorkBreakReminder: NSObject, UNUserNotificationCenterDelegate {
     }
 
     func stop() {
+        AlfredNotifications.stopTransientDelivery()
         timer?.invalidate()
         timer = nil
         NSWorkspace.shared.notificationCenter.removeObserver(self)

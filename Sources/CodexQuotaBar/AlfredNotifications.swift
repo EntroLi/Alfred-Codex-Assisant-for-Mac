@@ -46,6 +46,33 @@ struct PreparedAlfredNotification {
 }
 
 enum AlfredNotifications {
+    static let displayDuration: TimeInterval = 8
+    private static var expiryTimer: Timer?
+    static func startTransientDelivery() {
+        expiryTimer?.invalidate()
+        expireDelivered()
+        let timer = Timer(timeInterval: 2, repeats: true) { _ in expireDelivered() }
+        timer.tolerance = 0.5
+        RunLoop.main.add(timer, forMode: .common)
+        expiryTimer = timer
+    }
+    static func stopTransientDelivery() { expiryTimer?.invalidate(); expiryTimer = nil }
+    static func shouldExpire(category: String, noticeID: String?, deliveredAt: Date, now: Date) -> Bool {
+        let owned = category.hasPrefix("alfred-") || noticeID != nil
+        return owned && now.timeIntervalSince(deliveredAt) >= displayDuration
+    }
+    private static func expireDelivered() {
+        let center = UNUserNotificationCenter.current()
+        center.getDeliveredNotifications { notifications in
+            let now = Date()
+            let ids = notifications.filter {
+                shouldExpire(category: $0.request.content.categoryIdentifier,
+                    noticeID: $0.request.content.userInfo["noticeID"] as? String, deliveredAt: $0.date, now: now)
+            }.map { $0.request.identifier }
+            if !ids.isEmpty { center.removeDeliveredNotifications(withIdentifiers: ids) }
+        }
+    }
+
     static let testTitle = "少爷，蝙蝠信号已点亮"
     static let testBody = "Alfred 通讯检查：蝙蝠洞在线，提醒通道已就绪。这是一条测试通知。"
     static func prepare(title: String, body: String, kind: String, category: String, noticeID: String,
@@ -89,6 +116,6 @@ enum AlfredNotifications {
         let task = body.dropFirst(prefix.count).dropLast(suffix.count)
             .replacingOccurrences(of: "\n", with: " ")
         let name = task.count > 40 ? String(task.prefix(39)) + "…" : task
-        return name + "\n请返回对话处理，信号保留至已读。"
+        return name + "\n请返回对话查看。"
     }
 }

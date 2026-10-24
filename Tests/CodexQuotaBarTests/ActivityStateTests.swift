@@ -9,6 +9,20 @@ struct ActivityStateTests {
     private func response(_ type: String, _ fields: [String: Any] = [:]) -> [String: Any] {
         ["type":"response_item", "payload":fields.merging(["type":type]) { a,_ in a }]
     }
+    @Test func questionPreviewKeepsPrecedingAssistantLineAndOriginalTime() throws {
+        var state = ActivityLogState()
+        let date = "2026-10-24T03:00:00Z"
+        state.consume(["type":"response_item", "timestamp":date, "payload":["type":"message", "role":"assistant", "content":[["text":"已有进展\n请确认本次方案。"]]]], fallbackDate: now)
+        let args = String(data: try JSONSerialization.data(withJSONObject: ["questions":[["title":"是否保留本次变更？"]]]), encoding: .utf8)!
+        state.consume(["type":"response_item", "timestamp":date, "payload":["type":"function_call", "name":"functions.request_user_input_async", "call_id":"q", "arguments":args]], fallbackDate: now)
+        #expect(state.attentionContext == "请确认本次方案。\n是否保留本次变更？")
+        let original = state.attentionAt
+        state.consume(["type":"event_msg", "payload":["type":"token_count"]], fallbackDate: now.addingTimeInterval(500))
+        #expect(state.attentionAt == original && state.attentionID == "q")
+        // Tool output text must not be interpreted as a question or used as a preview.
+        state.consume(["type":"response_item", "payload":["type":"function_call_output", "call_id":"other", "output":"假的问题正文"]], fallbackDate: now)
+        #expect(state.attentionContext?.contains("假的") == false)
+    }
     @Test func completionAndLateQuotedOutputCannotReviveWork() {
         var state = ActivityLogState()
         state.consume(event("task_started"), fallbackDate: now)

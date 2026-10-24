@@ -19,13 +19,19 @@ struct AlfredNotificationTests {
         let fullBody = "蝙蝠信号已亮：" + task + "\n请返回对话处理。此信号会保留至你确认已读。"
         let prepared = AlfredNotifications.prepare(title: "少爷，有一个问题等你回答", body: fullBody,
             kind: "attention", category: "alfred-notice", noticeID: "attention-long", resourceDirectory: nil)
-        #expect(prepared.content.body == String(task.prefix(39)) + "…\n请返回对话处理，信号保留至已读。")
+        #expect(prepared.content.body == String(task.prefix(39)) + "…\n请返回对话查看。")
         #expect(prepared.content.attachments.isEmpty && prepared.attachmentError == nil)
         #expect(prepared.temporaryDirectory == nil)
         #expect(prepared.content.userInfo["noticeID"] as? String == "attention-long")
         #expect(prepared.content.categoryIdentifier == "alfred-notice")
         #expect(AlfredNotifications.bannerBody("日程正文\n请带材料。", kind: "calendar") == "日程正文\n请带材料。")
         #expect(AlfredNotifications.bannerBody("自定义提醒正文", kind: "attention") == "自定义提醒正文")
+    }
+    @Test func expiryUsesDeliveryTimeAndNeverTouchesForeignNotifications() {
+        let date = Date()
+        #expect(!AlfredNotifications.shouldExpire(category: "alfred-notice", noticeID: "n", deliveredAt: date, now: date.addingTimeInterval(7)))
+        #expect(AlfredNotifications.shouldExpire(category: "alfred-break", noticeID: "n", deliveredAt: date, now: date.addingTimeInterval(8)))
+        #expect(!AlfredNotifications.shouldExpire(category: "foreign", noticeID: nil, deliveredAt: date, now: date.addingTimeInterval(80)))
     }
     @Test func storiesCoverApprovedNoticeKindsAndRestMessagesStayActionable() {
         #expect(AlfredNotificationStory(kind: "quota").subtitle.contains("韦恩储备"))

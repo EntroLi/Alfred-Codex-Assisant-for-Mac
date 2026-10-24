@@ -8,6 +8,10 @@ struct ActivityLogState {
     var planMode = false
     var planReview = false
     var updatedAt: Date?
+    var attentionContext: String?
+    var attentionAt: Date?
+    var attentionID: String?
+    private var lastAssistantLine: String?
     var completedAt: Date?
     private static let fractional: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter(); f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]; return f
@@ -18,6 +22,9 @@ struct ActivityLogState {
         guard let payload = row["payload"] as? [String: Any] else { return }
         let date = (row["timestamp"] as? String).flatMap { Self.fractional.date(from: $0) ?? Self.plain.date(from: $0) } ?? fallbackDate
         let type = payload["type"] as? String ?? ""
+        func textLine(_ text: String) -> String? {
+            text.split(separator: "\n").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.last(where: { !$0.isEmpty }).map { String($0.prefix(180)) }
+        }
         func isFinal(_ value: Any?) -> Bool { ["final_answer", "final"].contains(value as? String ?? "") }
         if row["type"] as? String == "turn_context" {
             let collaboration = payload["collaboration_mode"]
@@ -29,6 +36,7 @@ struct ActivityLogState {
         if row["type"] as? String == "event_msg" {
             switch type {
             case "user_message":
+                attentionContext = nil; attentionAt = nil; attentionID = nil; lastAssistantLine = nil
                 active = true; calls.removeAll(); questions.removeAll(); planReview = false; completedAt = nil
             case "task_started":
                 active = true; calls.removeAll(); completedAt = nil
@@ -37,12 +45,14 @@ struct ActivityLogState {
             case "turn_aborted":
                 active = false; calls.removeAll(); questions.removeAll(); planReview = false; completedAt = nil
             case "agent_message":
+                if let text = payload["message"] as? String { lastAssistantLine = textLine(text) }
                 if isFinal(payload["phase"]) { active = false; calls.removeAll(); completedAt = date }
                 else { active = true; completedAt = nil }
             case "agent_reasoning", "token_count":
                 guard active != false else { return }
                 active = true
             case "approval_requested", "exec_approval_request", "apply_patch_approval_request":
+                attentionContext = lastAssistantLine; attentionAt = date; attentionID = payload["call_id"] as? String
                 active = true; calls[payload["call_id"] as? String ?? "approval"] = .waitingApproval
             default: return
             }
@@ -52,8 +62,11 @@ struct ActivityLogState {
         switch type {
         case "message":
             if payload["role"] as? String == "user" {
+                attentionContext = nil; attentionAt = nil; attentionID = nil; lastAssistantLine = nil
                 active = true; calls.removeAll(); questions.removeAll(); planReview = false; completedAt = nil
             } else if payload["role"] as? String == "assistant" {
+                let content = payload["content"] as? [[String: Any]] ?? []
+                if let line = textLine(content.compactMap { $0["text"] as? String }.joined(separator: "\n")) { lastAssistantLine = line }
                 if isFinal(payload["phase"]) { active = false; calls.removeAll(); completedAt = date }
                 else { active = true; completedAt = nil }
             } else { return }
@@ -62,8 +75,14 @@ struct ActivityLogState {
             guard let id = payload["call_id"] as? String else { return }
             active = true; completedAt = nil
             let name = payload["name"] as? String ?? ""
-            if name.hasSuffix("request_user_input") || name.hasSuffix("request_user_input_async") { questions.insert(id) }
-            if name.hasSuffix("update_plan") && planMode { planReview = true }
+            if name.hasSuffix("request_user_input") || name.hasSuffix("request_user_input_async") {
+                questions.insert(id)
+                let args = (payload["arguments"] as? String).flatMap { $0.data(using: .utf8) }.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+                let prompts = (args?["questions"] as? [[String: Any]] ?? []).compactMap { ($0["question"] ?? $0["title"]) as? String }.map { String($0.prefix(240)) }
+                attentionContext = ([lastAssistantLine].compactMap { $0 } + prompts).joined(separator: "\n")
+                attentionAt = date; attentionID = id
+            }
+            if name.hasSuffix("update_plan") && planMode { planReview = true; attentionContext = lastAssistantLine; attentionAt = date; attentionID = id }
             if payload["status"] as? String != "completed" { calls[id] = Self.toolKind(name) }
         case "function_call_output", "custom_tool_call_output":
             guard let id = payload["call_id"] as? String else { return }

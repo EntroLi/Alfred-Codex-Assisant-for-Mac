@@ -69,6 +69,7 @@ final class QuotaPaceView: NSView {
 
 final class AssistantBoardView: NSView {
     private let stack = NSStackView()
+    var onAcknowledgeAll: (() -> Void)?
     var onAcknowledge: ((String) -> Void)?
     var onOpenNotice: ((AssistantNotice) -> Void)?
     var onSnooze: (() -> Void)?
@@ -78,6 +79,7 @@ final class AssistantBoardView: NSView {
     var onConnectAgenda: (() -> Void)?
     var onOpenCalendar: (() -> Void)?
     var onOpenReminders: (() -> Void)?
+    var breakPending = false
     var agendaConnected = false
     var onExport: (() -> Void)?
     private var previousContent = ""
@@ -101,14 +103,21 @@ final class AssistantBoardView: NSView {
         currentBrief = brief
         briefField.font = AlfredTheme.font(ofSize: 12); briefField.textColor = AlfredTheme.ink
         briefField.stringValue = brief
-        let signature = notices.map { $0.id + $0.title + $0.body + String($0.resolved) }.joined() + agenda + butlerStatus + String(agendaConnected)
+        let signature = notices.map { $0.id + $0.title + $0.body + String($0.resolved) }.joined() + agenda + butlerStatus + String(agendaConnected) + String(breakPending)
         guard signature != previousContent else { return }; previousContent = signature
         stack.arrangedSubviews.forEach { stack.removeArrangedSubview($0); $0.removeFromSuperview() }
         let openButler = AlfredActionButton("打开管家", action: { [weak self] in self?.onOpenButler?() })
         let callButler = AlfredActionButton("打开语音入口", action: { [weak self] in self?.onCallButler?() })
         openButler.isEnabled = onOpenButler != nil; callButler.isEnabled = onCallButler != nil
         add(card("管家", [text(butlerStatus), row([openButler, callButler])]))
-        add(text("待处理 · \(notices.count)", bold: true))
+        if breakPending {
+            add(card("蝙蝠洞整备 · 活动提醒", [text("起身舒展一下；此提醒不计入管家待办。"), row([
+                AlfredActionButton("稍后5分钟", action: { [weak self] in self?.onSnooze?() }),
+                AlfredActionButton("已活动", action: { [weak self] in self?.onBreakDone?() })])]))
+        }
+        let readAll = AlfredActionButton("一键已读", action: { [weak self] in self?.onAcknowledgeAll?() })
+        readAll.isEnabled = !notices.isEmpty && onAcknowledgeAll != nil
+        add(row([text("管家待办 · \(notices.count)", bold: true), readAll]))
         if notices.isEmpty { add(text("暂时没有待处理提醒。")) }
         for notice in notices {
             var buttons: [NSView] = []
@@ -139,6 +148,10 @@ final class AssistantBoardView: NSView {
         return label
     }
     private func row(_ items: [NSView]) -> NSStackView { let row = NSStackView(views: items); row.orientation = .horizontal; row.spacing = 8; return row }
+    private static func noticeTime(_ date: Date) -> String {
+        let formatter = DateFormatter(); formatter.dateFormat = "MM/dd HH:mm"
+        return formatter.string(from: date)
+    }
     private func noticeCard(_ notice: AssistantNotice, buttons: [NSView]) -> NSView {
         let emblem = NSImageView(); emblem.image = AlfredTheme.bat(size: NSSize(width: 40, height: 24))
         emblem.setAccessibilityLabel("Alfred 蝙蝠徽记")
@@ -147,7 +160,7 @@ final class AssistantBoardView: NSView {
         let story = text(AlfredNotificationStory(kind: notice.kind).subtitle)
         story.font = AlfredTheme.font(ofSize: 10, weight: .bold); story.textColor = AlfredTheme.accent
         let heading = row([emblem, story]); heading.alignment = .centerY
-        return card(notice.title + (notice.resolved ? " · 已恢复" : ""), [heading, text(notice.body), row(buttons)])
+        return card(notice.title + (notice.resolved ? " · 已恢复" : ""), [heading, text(Self.noticeTime(notice.createdAt)), text(notice.body), row(buttons)])
     }
     private func card(_ title: String, _ items: [NSView]) -> NSView {
         let inner = NSStackView(views: [text(title, bold: true)] + items); inner.orientation = .vertical; inner.alignment = .leading; inner.spacing = 8

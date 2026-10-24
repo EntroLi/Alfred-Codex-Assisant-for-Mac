@@ -44,6 +44,7 @@ struct AssistantNotice: Codable, Identifiable, Equatable {
     let createdAt: Date
     var threadID: String?
     var resolved: Bool = false
+    var isButlerTodo: Bool { !["break", "quota"].contains(kind) }
 }
 
 struct AssistantNoticeArchive: Codable {
@@ -59,29 +60,39 @@ final class AssistantInbox {
     var onChange: (() -> Void)?
     var onNotify: ((AssistantNotice) -> Void)?
     private let key = "Alfred.inbox.v1"
-    var notices: [AssistantNotice] { archive.notices.sorted { $0.createdAt > $1.createdAt } }
-    var unreadCount: Int { archive.notices.count }
+    var notices: [AssistantNotice] { archive.notices.filter { $0.isButlerTodo && !$0.resolved }.sorted { $0.createdAt > $1.createdAt } }
+    var unreadCount: Int { notices.count }
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         archive = defaults.data(forKey: key).flatMap { try? JSONDecoder().decode(AssistantNoticeArchive.self, from: $0) } ?? AssistantNoticeArchive()
     }
     @discardableResult func post(_ notice: AssistantNotice) -> Bool {
         guard archive.notified[notice.id] == nil else { return false }
-        archive.notices.append(notice); archive.notified[notice.id] = notice.createdAt
+        if notice.isButlerTodo { archive.notices.append(notice) }
+        archive.notified[notice.id] = notice.createdAt
         // Do not remove unread items. Only expire old deduplication receipts.
         archive.notified = archive.notified.filter { notice.createdAt.timeIntervalSince($0.value) < 90 * 86400 }
         save(); onNotify?(notice); return true
     }
     func acknowledge(_ id: String) { archive.notices.removeAll { $0.id == id }; save() }
+    @discardableResult func acknowledgeAll() -> [String] {
+        let ids = notices.map(\.id)
+        archive.notices.removeAll { $0.isButlerTodo }; save()
+        return ids
+    }
     func observe(activities: [CodexActivitySnapshot], now: Date = Date()) {
         for activity in activities {
             guard let thread = activity.sessionID else { continue }
             let waiting = activity.kind.priority >= CodexActivityKind.waitingQuestion.priority
             if waiting {
-                let episode = archive.attentionEpisodes[thread] ?? "attention-\(thread)-\(Int64(activity.updatedAt.timeIntervalSince1970))"
+                let episode = activity.attentionID.map { "attention-\(thread)-\($0)" } ?? archive.attentionEpisodes[thread] ?? "attention-\(thread)-\(Int64(activity.updatedAt.timeIntervalSince1970))"
                 archive.attentionEpisodes[thread] = episode
+                if let index = archive.notices.firstIndex(where: { $0.id == episode }),
+                   let _ = activity.attentionContext, archive.notices[index].body != Self.attentionBody(activity) {
+                    archive.notices[index].body = Self.attentionBody(activity); save()
+                }
                 _ = post(AssistantNotice(id: episode, kind: "attention", title: activity.kind == .waitingApproval ? "少爷，有一项操作待放行" : activity.kind == .waitingReview ? "少爷，有一份任务待审阅" : "少爷，有一个问题等你回答",
-                    body: "蝙蝠信号已亮：" + (activity.sessionName ?? "Codex 对话") + "\n请返回对话处理。此信号会保留至你确认已读。", createdAt: now, threadID: thread))
+                    body: Self.attentionBody(activity), createdAt: activity.attentionAt ?? activity.updatedAt, threadID: thread))
             } else if let episode = archive.attentionEpisodes.removeValue(forKey: thread) {
                 if let index = archive.notices.firstIndex(where: { $0.id == episode }) { archive.notices[index].resolved = true }
                 save()
@@ -106,6 +117,11 @@ final class AssistantInbox {
             }
             _ = post(AssistantNotice(id: id, kind: "quota", title: title, body: (kind == "reserve" || kind == "slow" ? "少爷，可安排一项有价值的工作。\n" : "少爷，请留意本周额度安排。\n") + pace.description, createdAt: now))
         }
+    }
+    static func attentionBody(_ activity: CodexActivitySnapshot) -> String {
+        let formatter = DateFormatter(); formatter.dateFormat = "MM/dd HH:mm"
+        let context = activity.attentionContext ?? "请打开对话查看具体事项"
+        return "\(formatter.string(from: activity.attentionAt ?? activity.updatedAt)) · \(activity.sessionName ?? "Codex 对话")\n\(context)"
     }
     private func save() {
         if let data = try? JSONEncoder().encode(archive) { defaults.set(data, forKey: key) }
